@@ -157,26 +157,31 @@ const modify = router.patch('/:id', (req, res) => {
 /* Destroy */
 const destroy = router.delete('/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const post = archive.find(post => post.id == id);
+  const sql = 'DELETE FROM posts WHERE id = ?';
+  connection.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Error deleting post from the database:', err);
+      return res.status(500).json({
+        err: true,
+        message: 'Error deleting post from database'
+      })
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        err: true,
+        message: 'Post not found, nothing deleted'
+      })
+    }
+    res.sendStatus(204)
+  });
 
-  if (!post) {
-    res.status(404).json({
-      error: 'Not found',
-      message: 'Post non trovato'
-    })
-  }
-
-  archive.splice(archive.indexOf(post), 1);
-  console.log(archive)
-
-  res.sendStatus(204)
 });
 
-module.exports = {
-  index,
-  show,
-  store,
-  update,
-  modify,
-  destroy
-}
+  module.exports = {
+    index,
+    show,
+    store,
+    update,
+    modify,
+    destroy
+  }
