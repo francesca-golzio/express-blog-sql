@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const archive = require('../data/archive')
+const connection = require('../database/blog-db')
 
 /* Index */
 const index = router.get('/', (req, res) => {

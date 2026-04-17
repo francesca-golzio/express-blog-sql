@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = PORT;
+const port = 3000;
 const postsRouter = require('./routers/posts');
 const notFound = require('./middlewares/notFound');
 const errorHandler = require('./middlewares/errorsHandler');
@@ -13,14 +13,14 @@ app.use(express.json());
 
 /* Server Index */
 app.get('/', (req, res) => {
-  
+
   res.send('Sono il server del blog');
 });
 
 app.use('/posts', postsRouter);
 
 /* Il Server sta in ascolto alla port 3000 */
-app.listen(3000, () => {
+app.listen(port, () => {
   console.log('Il Server gira qui http://localhost:3000');
 });
 
