@@ -4,46 +4,15 @@ const connection = require('../database/blog-db')
 
 /* Index */
 const index = router.get('/', (req, res) => {
-  const requestedTag = req.query?.tags;
-
-  //0️⃣ se non è applicato alcun filtro
-  if (requestedTag == undefined) {
-    return res.json(archive);
-    //altrimenti...
-  } else {
-    //1️⃣ preparo un contenitorre per i risultati
-    let filteredPosts = [];
-    //2️⃣ trasformo i filtri in un formato utilizzabile perchè 👇
-    //                           👇 questo è un'unica stringa e mi servono i singoli tag
-    const requestedTagsArray = requestedTag.split(' ');
-    //console.log(requestedTagsArray);
-
-    archive.filter((post) => {
-
-      //3️⃣ cerco i post che contengono almeno uno dei tag
-      requestedTagsArray.map((tag) => {
-
-        //ma SOLO SE il post non è già selezionato
-        if (!(filteredPosts.includes(post))) {
-
-          //SE contiene un tag...
-          if (post.tags.includes(tag)) {
-            //... aggiungo il post ai risultati
-            filteredPosts = [...filteredPosts, post]
-          }
-        }
-      })
-    })
-
-    //4️⃣ risposta
-    // SE NON ci sono risultati (array vuoto)
-    if (filteredPosts.length === 0) {
-      return res.json('0 risultati')
-      //ALTRIMENTI restituisco i post filtrati
-    } else {
-      return res.json(filteredPosts);
-    }
-  }
+  const sql = 'SELECT * FROM posts';
+  
+  connection.query(sql, (err, result) => {
+    if (err) return res.status(500).json({
+      err: 'Database error',
+      message: 'Error retrieving posts from database'
+    });
+    res.json(result);
+  });
 });
 
 /* Show */
