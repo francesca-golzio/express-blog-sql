@@ -21,14 +21,24 @@ const index = router.get('/', (req, res) => {
 /* Show */
 const show = router.get('/:id', (req, res) => {
   const id = parseInt(req.params.id);
-  const post = archive.find(post => post.id === id);
-  if (!post) {
-    return res.status(404).json({
-      error: 'Not found',
-      message: 'Post non trovato'
-    })
-  }
-  res.json(post);
+
+  const sql = 'SELECT * FROM posts WHERE id = ?';
+  connection.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error('Error fetching post from the database:', err);
+      return res.status(500).json({
+        err: true,
+        message: 'Error retrieving post from database'
+      })
+    };
+    if (results.length === 0) {
+      return res.status(404).json({
+        err: true,
+        message: 'Post non trovato'
+      })
+    }
+    res.json(results[0]);
+  });
 });
 
 /* Store */
