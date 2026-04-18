@@ -34,7 +34,7 @@ const show = router.get('/:id', (req, res) => {
     if (results.length === 0) {
       return res.status(404).json({
         err: true,
-        message: 'Post non trovato'
+        message: 'Post not found'
       })
     }
     res.json(results[0]);
@@ -49,14 +49,14 @@ const store = router.post('/', (req, res) => {
     return (
       res.status(400).json({
         error: 'Bad request',
-        message: 'Esiste già un post con questo titolo'
+        message: 'Another post with this title already exists'
       })
     )
   } else if (title.length === 0 || title.length > 50) {
     return (
       res.status(400).json({
         error: 'Bad request',
-        message: 'Il titolo deve essere compreso tra 1 e 50 caratteri'
+        message: 'Title must be between 1 and 50 characters'
       })
     )
   } else if (content.length === 0 || content.length > 5000) {
@@ -64,7 +64,7 @@ const store = router.post('/', (req, res) => {
     return (
       res.status(400).json({
         error: 'Bad request',
-        message: 'Il post deve essere compreso tra 1 e 5000 caratteri'
+        message: 'Post must be between 1 and 5000 characters'
       })
     )
   } else {
@@ -89,7 +89,7 @@ const update = router.put('/:id', (req, res) => {
     return (
       res.status(400).json({
         error: 'Bad request',
-        message: '* title mancante'
+        message: '* Missing title (required parameter)'
       })
     )
   };
@@ -97,7 +97,7 @@ const update = router.put('/:id', (req, res) => {
     return (
       res.status(400).json({
         error: 'Bad request',
-        message: '* content (parametro mancante)'
+        message: '* Missing content (required parameter)'
       })
     )
   };
@@ -105,7 +105,7 @@ const update = router.put('/:id', (req, res) => {
     return (
       res.status(400).json({
         error: 'Bad request',
-        message: '* image (parametro mancante)'
+        message: '* Missing image (required parameter)'
       })
     )
   };
@@ -113,7 +113,7 @@ const update = router.put('/:id', (req, res) => {
     return (
       res.status(400).json({
         error: 'Bad request',
-        message: '* tags (parametro mancante)'
+        message: '* Missing tags (required parameter)'
       })
     )
   };
@@ -123,7 +123,7 @@ const update = router.put('/:id', (req, res) => {
         return (
           res.status(400).json({
             error: 'Bad request',
-            message: 'Esiste già un altro post con questo titolo'
+            message: 'Another post with this title already exists'
           })
         )
       }
@@ -131,7 +131,7 @@ const update = router.put('/:id', (req, res) => {
         return (
           res.status(400).json({
             error: 'Bad request',
-            message: 'Il titolo deve essere compreso tra 1 e 50 caratteri'
+            message: 'Title must be between 1 and 50 characters'
           })
         )
       }
@@ -140,7 +140,7 @@ const update = router.put('/:id', (req, res) => {
       return (
         res.status(400).json({
           error: 'Bad request',
-          message: 'Il post deve essere compreso tra 1 e 5000 caratteri'
+          message: 'Content must be between 1 and 5000 characters'
         })
       )
     }
@@ -153,7 +153,7 @@ const update = router.put('/:id', (req, res) => {
     return (
       res.status(404).json({
         error: 'Not found',
-        message: 'Post non trovato'
+        message: 'Post not found'
       })
     )
   }
@@ -161,7 +161,7 @@ const update = router.put('/:id', (req, res) => {
 
 /* Modify */
 const modify = router.patch('/:id', (req, res) => {
-  res.send(`Post ${req.params.id} aggiornato (minor updates)`);
+  res.send(`Post ${req.params.id} updated (minor updates)`);
 });
 
 /* Destroy */
