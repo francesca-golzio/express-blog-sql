@@ -21,23 +21,31 @@ const index = router.get('/', (req, res) => {
 /* Show */
 const show = router.get('/:id', (req, res) => {
   const id = parseInt(req.params.id);
+  /* const { id } = req.params; //🤔 come controllo che sia un numero intero adesso?? */
 
-  const sql = 'SELECT * FROM posts WHERE id = ?';
-  connection.query(sql, [id], (err, results) => {
+  const postSql = 'SELECT * FROM posts WHERE id = ?';
+  const tagSql = 'SELECT tags.* FROM tags INNER JOIN post_tag ON tags.id = post_tag.tag_id WHERE post_tag.post_id = ?';
+
+  connection.query(postSql, [id], (err, postResults) => {
     if (err) {
       console.error('Error fetching post from the database:', err);
-      return res.status(500).json({
-        err: true,
-        message: 'Error retrieving post from database'
-      })
+      return res.status(500).json({ err: true, message: 'Error retrieving post from database' })
     };
-    if (results.length === 0) {
-      return res.status(404).json({
-        err: true,
-        message: 'Post not found'
-      })
+    if (postResults.length === 0) {
+      return res.status(404).json({ err: true, message: 'Post not found' })
     }
-    res.json(results[0]);
+    const post = postResults[0];
+
+    connection.query(tagSql, [id], (err, tagResults) => {
+      if (err) {
+        console.error('Error fetching tags from the database:', err);
+        return res.status(500).json({ err: true, message: 'Error retrieving tags from database' })
+      };
+      const postTagsArray = tagResults.map(tag => tag.label);
+      post.tags = postTagsArray;
+      res.json(post);
+
+    });
   });
 });
 
@@ -187,11 +195,11 @@ const destroy = router.delete('/:id', (req, res) => {
 
 });
 
-  module.exports = {
-    index,
-    show,
-    store,
-    update,
-    modify,
-    destroy
-  }
+module.exports = {
+  index,
+  show,
+  store,
+  update,
+  modify,
+  destroy
+}
